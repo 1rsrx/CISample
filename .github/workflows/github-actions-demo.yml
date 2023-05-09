@@ -1,5 +1,4 @@
 name: CI
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 env:
   DEVELOPER_DIR: /Applications/Xcode_14.2.app
@@ -10,7 +9,7 @@ jobs:
   	steps:
   		- uses: actions/checkout@v3
   		- name: Xcode build
-  		run: set -o pipefail &&
+  		  run: set -o pipefail &&
         xcodebuild
         -sdk iphonesimulator
         -configuration Debug
@@ -20,7 +19,7 @@ jobs:
         | bundle exec xcpretty
         
 		- name: Xcode test
-		run: set -o pipefail &&
+		  run: set -o pipefail &&
         xcodebuild
         -sdk iphonesimulator
         -configuration Debug
