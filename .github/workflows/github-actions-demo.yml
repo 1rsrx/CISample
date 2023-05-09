@@ -18,9 +18,9 @@ jobs:
         -scheme CISample
         build
         | bundle exec xcpretty
-  		
-  		- name: Xcode test
-  		run: set -o pipefail &&
+        
+		- name: Xcode test
+		run: set -o pipefail &&
         xcodebuild
         -sdk iphonesimulator
         -configuration Debug
