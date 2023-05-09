@@ -5,10 +5,10 @@ env:
   DEVELOPER_DIR: /Applications/Xcode_14.2.app
 jobs:
   test:
+  	name: check swift source
   	runs-on: macOS-latest
   	steps:
   		- uses: actions/checkout@v3
-  		
   		- name: Xcode build
   		run: set -o pipefail &&
         xcodebuild
