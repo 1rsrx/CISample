@@ -4,28 +4,21 @@ env:
   DEVELOPER_DIR: /Applications/Xcode_14.2.app
 jobs:
   test:
-  	name: check swift source
-  	runs-on: macOS-latest
+  	name: Run SwiftLint
+  	runs-on: ubuntu-latest
   	steps:
   		- uses: actions/checkout@v3
-  		- name: Xcode build
-  		  run: set -o pipefail &&
-        xcodebuild
-        -sdk iphonesimulator
-        -configuration Debug
-        -workspace CISample.xcworkspace
-        -scheme CISample
-        build
-        | bundle exec xcpretty
-        
-		- name: Xcode test
-		  run: set -o pipefail &&
-        xcodebuild
-        -sdk iphonesimulator
-        -configuration Debug
-        -workspace CISample.xcworkspace
-        -scheme CISample
-        -destination 'platform=iOS Simulator,name=iPhone 14 Pro Max'
-        -skip-testing:{UIテスト}
-        clean test
-        | bundle exec xcpretty --report html
+  		- name: GitHub Action for SwiftLint
+            uses: norio-nomura/action-swiftlint@3.2.1
+        - name: GitHub Action for SwiftLint with --strict
+            uses: norio-nomura/action-swiftlint@3.2.1
+            with:
+                args: --strict
+        - name: GitHub Action for SwiftLint (Only files changed in the PR)
+            uses: norio-nomura/action-swiftlint@3.2.1
+            env:
+                DIFF_BASE: ${{ github.base_ref }}
+        - name: GitHub Action for SwiftLint (Different working directory)
+            uses: norio-nomura/action-swiftlint@3.2.1
+            env:
+                WORKING_DIRECTORY: Source
