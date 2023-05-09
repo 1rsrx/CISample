@@ -1,18 +1,32 @@
-name: GitHub Actions Demo
+name: CI
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
+env:
+  DEVELOPER_DIR: /Applications/Xcode_14.2.app
 jobs:
-  Explore-GitHub-Actions:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+  test:
+  	runs-on: macOS-latest
+  	steps:
+  		- uses: actions/checkout@v3
+  		
+  		- name: Xcode build
+  		run: set -o pipefail &&
+        xcodebuild
+        -sdk iphonesimulator
+        -configuration Debug
+        -workspace CISample.xcworkspace
+        -scheme CISample
+        build
+        | bundle exec xcpretty
+  		
+  		- name: Xcode test
+  		run: set -o pipefail &&
+        xcodebuild
+        -sdk iphonesimulator
+        -configuration Debug
+        -workspace CISample.xcworkspace
+        -scheme CISample
+        -destination 'platform=iOS Simulator,name=iPhone 14 Pro Max'
+        -skip-testing:{UIテスト}
+        clean test
+        | bundle exec xcpretty --report html
